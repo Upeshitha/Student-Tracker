@@ -1,7 +1,9 @@
 package com.upeshitha.web.jdbc;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,5 +48,32 @@ public class StudentDbUtil {
 			con.close();
 		}
 		return students;
+	}
+
+	public void addStudent(Student theStudent) {
+		Connection con = null;
+		PreparedStatement pr = null;
+		
+		try {
+			con = dataSource.getConnection();
+			String sql = "insert into student(first_name, last_name, email) values(?,?,?)";
+			pr = con.prepareStatement(sql);
+			pr.setString(1, theStudent.getFirstName());
+			pr.setString(2, theStudent.getLastName());
+			pr.setString(3, theStudent.getEmail());
+			
+			pr.execute();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pr.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
 	}
 }

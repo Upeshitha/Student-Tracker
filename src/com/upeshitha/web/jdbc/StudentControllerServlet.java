@@ -23,8 +23,7 @@ public class StudentControllerServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		super.init();
-		
+		super.init();		
 		try {
 			studentDbUtil = new StudentDbUtil(dataSource);
 		} catch (Exception e) {
@@ -33,6 +32,36 @@ public class StudentControllerServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// read the 'command' parameter
+		String theCommand = request.getParameter("command");
+		// if the command is missing, then default to listing students
+		if (theCommand == null) {
+			theCommand = "LIST";
+		}
+		
+		switch (theCommand) {
+		case "LIST":
+			listStudent(request, response);
+			break;
+		case "ADD":
+			addStudent(request, response);
+			break;
+
+		default:
+			listStudent(request, response);
+			break;
+		}
+		
+	}
+
+	private void addStudent(HttpServletRequest request, HttpServletResponse response){
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String email = request.getParameter("email");
+		
+		Student theStudent = new Student(firstName, lastName, email);
+		
+		studentDbUtil.addStudent(theStudent);
 		listStudent(request, response);
 	}
 
