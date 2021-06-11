@@ -76,4 +76,44 @@ public class StudentDbUtil {
 			
 		}
 	}
+
+	public Student getStudent(String theStudentId) {
+		Student theStudent = null;
+		
+		Connection con = null;
+		PreparedStatement pr = null;
+		ResultSet rs = null;
+		int studentId;
+		
+		try {
+			studentId = Integer.parseInt(theStudentId);
+			con = dataSource.getConnection();
+			String sql = "select * from student where id=?";
+			pr = con.prepareStatement(sql);
+			pr.setInt(1, studentId);
+			rs = pr.executeQuery();	
+			
+			if (rs.next()) {
+				String firstName = rs.getString("first_name");
+				String lastName = rs.getString("last_name");
+				String email = rs.getString("email");
+				
+				// using this info create new student
+				theStudent = new Student(studentId, firstName, lastName, email);
+			} else {
+				throw new Exception("could not find student id: " + studentId);
+			}	
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pr.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return theStudent;
+	}
 }
