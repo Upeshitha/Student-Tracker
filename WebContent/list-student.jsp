@@ -11,7 +11,7 @@
 	<body>
 		<div id = "wrapper">
 			<div id = "header">
-				<h2>Web Student Tracker</h2>
+				<h2>Student Tracker</h2>
 			</div>
 		</div>
 		
