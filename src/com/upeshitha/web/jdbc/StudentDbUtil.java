@@ -107,6 +107,7 @@ public class StudentDbUtil {
 			e.printStackTrace();
 		} finally {
 			try {
+				rs.close();
 				pr.close();
 				con.close();
 			} catch (SQLException e) {
@@ -115,5 +116,53 @@ public class StudentDbUtil {
 		}
 		
 		return theStudent;
+	}
+
+	public void updateStudent(Student theStudent) {
+		Connection con = null;
+		PreparedStatement pr = null;
+		try {
+			con = dataSource.getConnection();
+			String sql = "update student set first_name=?, last_name=?, email=? "
+					      + "where id=?";
+			pr = con.prepareStatement(sql);
+			pr.setString(1, theStudent.getFirstName());
+			pr.setString(2, theStudent.getLastName());
+			pr.setString(3, theStudent.getEmail());
+			pr.setInt(4, theStudent.getId());
+			pr.execute();	
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pr.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+	}
+
+	public void deleteStudent(String theStudentId) {
+		Connection con = null;
+		PreparedStatement pr = null;
+		try {
+			int studentId = Integer.parseInt(theStudentId);
+			con = dataSource.getConnection();
+			String sql = "delete from student where id=?";
+			pr = con.prepareStatement(sql);
+			pr.setInt(1, studentId);
+			pr.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pr.close();
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }
